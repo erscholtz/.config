@@ -9,3 +9,5 @@
 !git/**
 !fontconfig/
 !fontconfig/**
+!nvim/
+!nvim/**

@@ -98,6 +98,8 @@ in
     unstable.neovim
     unstable.codex
 
+    spotify
+
     #T3Code
     t3code.packages.${system}.t3
     t3code.packages.${system}.t3code
