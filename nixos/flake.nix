@@ -17,6 +17,11 @@
     };
 
     helium.url = "github:FKouhai/helium2nix/main";
+
+#    harnessd = {
+#      url = "path:/home/e/Documents/dev/harnessd";
+#      inputs.nixpkgs.follows = "nixpkgs-unstable";
+#    };
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, t3code, helium, ... }: {

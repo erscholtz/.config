@@ -11,3 +11,5 @@
 !fontconfig/**
 !nvim/
 !nvim/**
+!tmux/
+!tmux/**

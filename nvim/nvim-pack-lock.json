@@ -1,8 +1,36 @@
 {
   "plugins": {
+    "cmp-buffer": {
+      "rev": "b74fab3656eea9de20a9b8116afa3cfc4ec09657",
+      "src": "https://github.com/hrsh7th/cmp-buffer"
+    },
+    "cmp-nvim-lsp": {
+      "rev": "cbc7b02bb99fae35cb42f514762b89b5126651ef",
+      "src": "https://github.com/hrsh7th/cmp-nvim-lsp"
+    },
+    "cmp-path": {
+      "rev": "c642487086dbd9a93160e1679a1327be111cbc25",
+      "src": "https://github.com/hrsh7th/cmp-path"
+    },
+    "nvim-cmp": {
+      "rev": "a1d504892f2bc56c2e79b65c6faded2fd21f3eca",
+      "src": "https://github.com/hrsh7th/nvim-cmp"
+    },
     "nvim-lspconfig": {
       "rev": "a4ed4e761c400849e8c9f8bda33e5083f890268c",
       "src": "https://github.com/neovim/nvim-lspconfig"
+    },
+    "oil.nvim": {
+      "rev": "b91ee5a77a6a9605d9c1aaf4fda74b66082c8297",
+      "src": "https://github.com/stevearc/oil.nvim"
+    },
+    "plenary.nvim": {
+      "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
+      "src": "https://github.com/nvim-lua/plenary.nvim"
+    },
+    "telescope.nvim": {
+      "rev": "7d324792b7943e4aa16ad007212e6acc6f9fe335",
+      "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "vague.nvim": {
       "rev": "fd58046b9d64259d9785e4aeb6d6f494c6943cad",

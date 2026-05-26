@@ -1,0 +1,4 @@
+set -g clock-mode-style 24
+set -sg escape-time 0
+setw -g mode-keys vi
+set -g mouse on

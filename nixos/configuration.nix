@@ -32,21 +32,54 @@ in
   # Select internationalisation properties.
   i18n.defaultLocale = "en_CA.UTF-8";
 
-  # Enable the X11 windowing system.
+  # Keep Plasma as the desktop while excluding optional bundled applications.
   services.xserver = {
-  	enable = true;
-	autoRepeatDelay = 200;
-	autoRepeatInterval = 35;
+    enable = true;
+    autoRepeatDelay = 200;
+    autoRepeatInterval = 35;
   };
-
-  # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    aurorae
+    plasma-browser-integration
+    plasma-workspace-wallpapers
+    konsole
+    kwin-x11
+    qttools
+    ark
+    elisa
+    gwenview
+    okular
+    kate
+    ktexteditor
+    khelpcenter
+    dolphin
+    baloo-widgets
+    dolphin-plugins
+    spectacle
+    ffmpegthumbs
+    krdp
+    discover
+  ];
 
-  # Configure keymap in X11
+  # Use the HHKB Muhenkan thumb key as Super/Mod4.
   services.xserver.xkb = {
-    layout = "us";
+    layout = "hhkb";
     variant = "";
+    extraLayouts.hhkb = {
+      description = "English (US, HHKB Muhenkan as Super)";
+      languages = [ "eng" ];
+      symbolsFile = pkgs.writeText "hhkb-symbols" ''
+        default partial alphanumeric_keys modifier_keys
+        xkb_symbols "basic" {
+          include "us(basic)"
+          name[Group1] = "English (US, HHKB Muhenkan as Super)";
+          replace key <MUHE> { [ Super_L ] };
+          modifier_map Mod4 { <MUHE> };
+        };
+      '';
+    };
   };
 
   # Enable CUPS to print documents.
@@ -75,6 +108,10 @@ in
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       kdePackages.kate
+      kdePackages.dolphin
+      kdePackages.okular
+      kdePackages.ark
+      kdePackages.spectacle
     #  thunderbird
     ];
   };
@@ -92,13 +129,25 @@ in
     wget
     git
     gh
+    gcc
+    gnumake
+    pkg-config
     ghostty
-    helium.defaultPackage.${system}
+    obsidian
+    spotify
+    rust-analyzer
+    rustc
+    cargo
+    rustfmt
+    clippy
+    rustup
 
     unstable.neovim
     unstable.codex
+    pkgs.codex-acp
+    # harnessd.packages.${system}.default
 
-    spotify
+    helium.defaultPackage.${system}
 
     #T3Code
     t3code.packages.${system}.t3
@@ -110,6 +159,14 @@ in
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-generations +10";
+  };
+  nix.optimise.automatic = true;
+
+  boot.loader.systemd-boot.configurationLimit = 10;
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
