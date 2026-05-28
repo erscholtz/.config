@@ -1,1 +1,3 @@
 theme = vague
+background-opacity = 0.92
+background-opacity-cells = true

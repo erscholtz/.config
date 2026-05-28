@@ -13,3 +13,5 @@
 !nvim/**
 !tmux/
 !tmux/**
+!tmux/tmux.conf
+!tmux/sessionizer.sh

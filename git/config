@@ -1,1 +1,9 @@
-/nix/store/iphcbcpin4iz1j45h13ll3n5qjazc2r7-home-manager-files/.config/git/config
+[credential "https://gist.github.com"]
+	helper = "!gh auth git-credential"
+
+[credential "https://github.com"]
+	helper = "!gh auth git-credential"
+
+[user]
+	email = "erikscholtz23@gmail.com"
+	name = "erik"

@@ -4,33 +4,18 @@
   home.homeDirectory = "/home/e";
   xdg.enable = true;
 
-  programs.git = {
-    enable = true;
-
-    settings = {
-      user = {
-        name = "erik";
-        email = "erikscholtz23@gmail.com";
-      };
-
-      credential."https://github.com".helper = "!gh auth git-credential";
-      credential."https://gist.github.com".helper = "!gh auth git-credential";
-    };
-  };
+  home.packages = with pkgs; [
+    fzf
+    tmux
+  ];
 
   programs.bash = {
     enable = true;
     shellAliases = {
       btw = "echo I use nix btw";
+      ss = "${config.home.homeDirectory}/.config/tmux/sessionizer.sh";
     };
   };
-
-  programs.tmux = {
-    enable = true;
-  };
-
-  home.file.".tmux.conf".source =
-    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/tmux/tmux.conf";
 
   home.file."Pictures/Wallpapers/wallhaven-e89l8k.jpg".source =
     config.lib.file.mkOutOfStoreSymlink
@@ -45,6 +30,14 @@
     StartupNotify=false
     Terminal=false
     OnlyShowIn=KDE;
+  '';
+
+  xdg.configFile."kscreenlockerrc".text = ''
+    [Greeter]
+    WallpaperPlugin=org.kde.image
+
+    [Greeter][Wallpaper][org.kde.image][General]
+    Image=file://${config.home.homeDirectory}/Pictures/Wallpapers/wallhaven-e89l8k.jpg
   '';
 
   # home.file.".local/share/nvim/site/pack/harnessd/start/harnessd".source =
