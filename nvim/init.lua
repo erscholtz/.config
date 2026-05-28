@@ -28,6 +28,7 @@ vim.pack.add({
   { src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
   { src = "https://github.com/hrsh7th/cmp-buffer" },
   { src = "https://github.com/hrsh7th/cmp-path" },
+  { src = "https://github.com/windwp/nvim-autopairs" },
   { src = "https://github.com/nvim-lua/plenary.nvim" },
   { src = "https://github.com/nvim-telescope/telescope.nvim" },
   { src = "https://github.com/vague-theme/vague.nvim" },
@@ -39,6 +40,7 @@ vim.cmd.colorscheme("vague")
 require("oil").setup()
 require("telescope").setup()
 require("config.cmp")
+require("config.autopairs")
 require("config.lsp")
 --local harnessd_ok, harnessd = pcall(require, "harnessd")
 --if harnessd_ok then
