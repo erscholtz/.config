@@ -35,7 +35,30 @@ vim.pack.add({
   { src = "https://github.com/stevearc/oil.nvim" },
 })
 
+require("vague").setup({
+  transparent = true,
+})
+
 vim.cmd.colorscheme("vague")
+
+local function keep_terminal_background()
+  for _, group in ipairs({
+    "Normal",
+    "NormalNC",
+    "NormalFloat",
+    "SignColumn",
+    "EndOfBuffer",
+    "LineNr",
+    "FoldColumn",
+  }) do
+    vim.api.nvim_set_hl(0, group, { bg = "NONE" })
+  end
+end
+
+keep_terminal_background()
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = keep_terminal_background,
+})
 
 require("oil").setup()
 require("telescope").setup()
