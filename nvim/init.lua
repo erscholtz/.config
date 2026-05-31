@@ -60,6 +60,29 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   callback = keep_terminal_background,
 })
 
+local function color_todo_keywords_like_strings()
+  vim.api.nvim_set_hl(0, "TodoStringKeyword", { link = "String" })
+  vim.api.nvim_set_hl(0, "Todo", { link = "String" })
+end
+
+local function match_todo_keywords()
+  if vim.w.todo_string_keyword_match_id then
+    pcall(vim.fn.matchdelete, vim.w.todo_string_keyword_match_id)
+  end
+
+  vim.w.todo_string_keyword_match_id =
+    vim.fn.matchadd("TodoStringKeyword", [[\<\(NOTE\|FIXME\|FIX\|TODO\)\>]])
+end
+
+color_todo_keywords_like_strings()
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = color_todo_keywords_like_strings,
+})
+
+vim.api.nvim_create_autocmd({ "VimEnter", "WinEnter", "BufWinEnter" }, {
+  callback = match_todo_keywords,
+})
+
 require("oil").setup()
 require("telescope").setup()
 require("config.cmp")
