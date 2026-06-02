@@ -83,7 +83,7 @@ vim.api.nvim_create_autocmd({ "VimEnter", "WinEnter", "BufWinEnter" }, {
   callback = match_todo_keywords,
 })
 
-require("oil").setup()
+require("config.oil")
 require("telescope").setup()
 require("config.cmp")
 require("config.autopairs")
