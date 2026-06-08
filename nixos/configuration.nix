@@ -135,6 +135,7 @@ in
     ghostty
     obsidian
     spotify
+    zed-editor
     rust-analyzer
     rustc
     cargo

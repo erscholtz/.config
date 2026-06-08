@@ -9,6 +9,11 @@ cmp.setup({
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<CR>"] = cmp.mapping.confirm({ select = false }),
     ["<Tab>"] = cmp.mapping(function(fallback)
+      local harnessd_ok, harnessd = pcall(require, "harnessd")
+      if harnessd_ok and harnessd.is_auto_inline_enabled() and harnessd.accept() then
+        return
+      end
+
       if cmp.visible() then
         cmp.confirm({ select = true })
       else
