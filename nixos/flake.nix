@@ -18,18 +18,20 @@
 
     helium.url = "github:FKouhai/helium2nix/main";
 
+    zig-overlay.url = "github:mitchellh/zig-overlay";
+
 #    harnessd = {
 #      url = "path:/home/e/Documents/dev/harnessd";
 #      inputs.nixpkgs.follows = "nixpkgs-unstable";
 #    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, t3code, helium, ... }: {
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, t3code, helium, zig-overlay, ... }: {
     nixosConfigurations.thinkbox = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
 
       specialArgs = {
-	inherit nixpkgs-unstable t3code helium;
+	inherit nixpkgs-unstable t3code helium zig-overlay;
       };
 
       modules = [

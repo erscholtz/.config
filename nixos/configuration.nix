@@ -1,4 +1,4 @@
-{ config, pkgs, nixpkgs-unstable, t3code, helium, ... }:
+{ config, pkgs, nixpkgs-unstable, t3code, helium, zig-overlay, ... }:
 let 
   system = pkgs.stdenv.hostPlatform.system;
 
@@ -121,6 +121,9 @@ in
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.overlays = [
+    zig-overlay.overlays.default
+  ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -129,19 +132,23 @@ in
     wget
     git
     gh
+    nodejs
+    pnpm
     gcc
     gnumake
     pkg-config
     ghostty
     obsidian
     spotify
-    zed-editor
+    discord
+    unstable.zed-editor
     rust-analyzer
     rustc
     cargo
     rustfmt
     clippy
     rustup
+    zigpkgs.default
 
     unstable.neovim
     unstable.codex
