@@ -40,6 +40,7 @@ in
   };
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
+  services.xserver.desktopManager.xfce.enable = true;
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     aurorae
     plasma-browser-integration
