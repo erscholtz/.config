@@ -135,6 +135,8 @@ in
     gh
     nodejs
     pnpm
+    python3
+    python3Packages.pip
     gcc
     gnumake
     pkg-config
