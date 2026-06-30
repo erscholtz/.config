@@ -26,30 +26,35 @@
 #    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, t3code, helium, zig-overlay, ... }: {
-    nixosConfigurations.thinkbox = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, t3code, helium, zig-overlay, ... }:
+    let
+      mkSystem = host: nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
 
-      specialArgs = {
-	inherit nixpkgs-unstable t3code helium zig-overlay;
+        specialArgs = {
+          inherit nixpkgs-unstable t3code helium zig-overlay;
+        };
+
+        modules = [
+          ./hosts/${host}
+
+          home-manager.nixosModules.home-manager
+
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+
+              users.e = import ./home.nix;
+
+              backupFileExtension = "backup";
+            };
+          }
+        ];
       };
-
-      modules = [
-        ./configuration.nix
-
-        home-manager.nixosModules.home-manager
-
-        {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-
-            users.e = import ./home.nix;
-
-            backupFileExtension = "backup";
-          };
-        }
-      ];
+    in
+    {
+      nixosConfigurations.thinkbox = mkSystem "thinkbox";
+      nixosConfigurations.thinkpad = mkSystem "thinkpad";
     };
-  };
 }
