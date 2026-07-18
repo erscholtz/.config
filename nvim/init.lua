@@ -97,30 +97,15 @@ if harnessd_ok then
   harnessd.setup({
     command = harnessd_root .. "/target/debug/harnessd",
     codex_command = "codex",
-    auto_inline = true,
-    auto_inline_delay_ms = 900,
-    inline_completion_prompt = "Complete the code at the cursor with the smallest useful insertion.",
   })
-  vim.keymap.set("n", "<leader>i", function()
-    harnessd.toggle_auto_inline()
-  end, { desc = "Toggle Harnessd autocomplete" })
 else
   vim.notify("harnessd Neovim integration not found", vim.log.levels.WARN)
 end
 
-function _G.harnessd_autocomplete_status()
-  if harnessd_ok then
-    return harnessd.statusline()
-  end
-  return "autocomplete: [off]"
-end
-
-vim.opt.statusline = "%f %m%r%=%{v:lua.harnessd_autocomplete_status()} %l:%c"
-
 vim.keymap.set("n", "<leader>q", "<cmd>quit<cr>", { desc = "Quit" })
 vim.keymap.set("n", "<leader>w", "<cmd>write<cr>", { desc = "Write" })
 vim.keymap.set("n", "<leader>o", "<cmd>Oil<cr>", { desc = "Open parent directory" })
-vim.keymap.set("n", "<leader>e", require("telescope.builtin").find_files, { desc = "Find files" })
+vim.keymap.set("n", "<leader>f", require("telescope.builtin").find_files, { desc = "Find files" })
 vim.keymap.set("n", "<leader>so", function()
   vim.cmd.write()
   vim.cmd.source("%")
@@ -130,4 +115,7 @@ if harnessd_ok then
   vim.keymap.set("n", "<leader>a", function()
     harnessd.thread_ask()
   end, { desc = "Harnessd ask" })
+  vim.keymap.set("n", "<leader>h", function()
+    harnessd.open_settings()
+  end, { desc = "Harnessd settings" })
 end

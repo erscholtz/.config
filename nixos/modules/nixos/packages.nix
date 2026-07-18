@@ -35,7 +35,7 @@ in
 
     unstable.neovim
     unstable.codex
-    pkgs.codex-acp
+    unstable.codex-acp
 
     helium.defaultPackage.${system}
 
