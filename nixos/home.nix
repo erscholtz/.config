@@ -1,16 +1,28 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, herdr, ... }: {
   home.stateVersion = "25.11";
   home.username = "e";
   home.homeDirectory = "/home/e";
   xdg.enable = true;
 
+  home.sessionVariables = {
+    PI_CODING_AGENT_DIR = "${config.xdg.configHome}/pi";
+  };
+
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.local/bin"
+  ];
+
   home.packages = with pkgs; [
     fzf
     tmux
+    herdr.packages.${pkgs.system}.default
   ];
 
   programs.bash = {
     enable = true;
+    initExtra = ''
+      export PATH="$HOME/.local/bin:$PATH"
+    '';
     shellAliases = {
       btw = "echo I use nix btw";
       ss = "${config.home.homeDirectory}/.config/tmux/sessionizer.sh";

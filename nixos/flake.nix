@@ -20,19 +20,21 @@
 
     zig-overlay.url = "github:mitchellh/zig-overlay";
 
+    herdr.url = "github:herdrdev/herdr/v0.7.5";
+
 #    harnessd = {
 #      url = "path:/home/e/Documents/dev/harnessd";
 #      inputs.nixpkgs.follows = "nixpkgs-unstable";
 #    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, t3code, helium, zig-overlay, ... }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, t3code, helium, zig-overlay, herdr, ... }:
     let
       mkSystem = host: nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
 
         specialArgs = {
-          inherit nixpkgs-unstable t3code helium zig-overlay;
+          inherit nixpkgs-unstable t3code helium zig-overlay herdr;
         };
 
         modules = [
@@ -44,6 +46,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              extraSpecialArgs = { inherit herdr; };
 
               users.e = import ./home.nix;
 
