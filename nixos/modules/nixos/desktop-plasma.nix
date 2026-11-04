@@ -10,6 +10,17 @@
   services.desktopManager.plasma6.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
 
+  programs.sway.enable = true;
+
+  environment.etc."sway/config.d/10-keyboard.conf".text = ''
+    # Muhenkan is mapped to Super_L/Mod4 by the hhkb XKB layout below.
+    set $mod Mod4
+
+    input type:keyboard {
+      xkb_layout hhkb
+    }
+  '';
+
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     aurorae
     plasma-browser-integration
