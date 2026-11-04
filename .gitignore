@@ -11,7 +11,9 @@
 !fontconfig/**
 !nvim/
 !nvim/**
+!sway/
 !tmux/
 !tmux/**
 !tmux/tmux.conf
 !tmux/sessionizer.sh
+!waybar
