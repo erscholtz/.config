@@ -19,6 +19,7 @@
   home.packages = with pkgs; [
     fzf
     tmux
+    copilot-language-server
     herdr.packages.${pkgs.system}.default
   ];
 
@@ -64,52 +65,81 @@
       height = 28;
       modules-left = [ "sway/workspaces" ];
       modules-center = [ "clock" ];
-      modules-right = [ "custom/online" "network" "pulseaudio" "battery" "tray" ];
+      modules-right = [ "custom/online" "network" "cpu" "memory" "pulseaudio" "battery" "tray" ];
 
       "sway/workspaces".format = "{name}";
 
       clock = {
         interval = 1;
-        format = "{:%d/%m/%y  %H:%M:%S}";
+        format = "{:%Y-%m-%d %H:%M:%S}";
         tooltip-format = "{:%A, %d %B %Y}";
       };
 
       network = {
-        format-wifi = "󰤨";
-        format-ethernet = "󰈀";
-        format-disconnected = "󰤭";
+        interval = 2;
+        format-wifi = "W: {essid} {bandwidthDownBytes} down {bandwidthUpBytes} up";
+        format-ethernet = "E: {ipaddr} {bandwidthDownBytes} down {bandwidthUpBytes} up";
+        format-disconnected = "NET: down";
         tooltip-format = "{ifname} · {essid} · {ipaddr}\n{signalStrength}%";
         tooltip-format-disconnected = "No connection";
       };
 
       # Real internet check (the network module only reports link state).
       "custom/online" = {
-        exec = "${pkgs.iputils}/bin/ping -c1 -W2 1.1.1.1 >/dev/null && echo '󰖩' || echo '󰖪'";
+        exec = "${pkgs.iputils}/bin/ping -c1 -W2 1.1.1.1 >/dev/null && echo 'NET: up' || echo 'NET: no internet'";
         interval = 10;
         tooltip = false;
       };
 
+      cpu = {
+        interval = 2;
+        format = "CPU: {usage}%";
+        states.warning = 80;
+      };
+
+      memory = {
+        interval = 5;
+        format = "RAM: {used:0.1f}G/{total:0.1f}G";
+        tooltip-format = "{percentage}% used";
+        states.warning = 80;
+      };
+
       pulseaudio = {
-        format = "{icon}";
-        format-muted = "󰝟";
-        format-icons.default = [ "󰕿" "󰖀" "󰕾" ];
-        tooltip-format = "{volume}%";
+        format = "VOL: {volume}%";
+        format-muted = "VOL: muted";
       };
 
       battery = {
-        format = "{icon}";
-        format-icons = [ "󰁺" "󰁼" "󰁾" "󰂀" "󰁹" ];
-        tooltip-format = "{capacity}% · {timeTo}";
+        format = "BAT: {capacity}%";
+        states = { warning = 30; critical = 15; };
+        format-charging = "CHR: {capacity}%";
+        format-plugged = "BAT: full";
+        tooltip-format = "{timeTo}";
       };
     };
     style = ''
-      * { font-family: "JetBrainsMono Nerd Font"; font-size: 13pt; }
-      #workspaces button, #clock, #custom-online, #network, #pulseaudio, #battery, #tray { padding: 0 8px; margin: 0; min-width: 0; }
+      * { font-family: "JetBrainsMono Nerd Font"; font-size: 12pt; }
       window#waybar { background: #000000; color: #cdcdcd; }
-      #workspaces button { padding: 0 8px; color: #878787; }
+      #workspaces button { padding: 0 8px; margin: 0; min-width: 0; color: #878787; border-radius: 0; }
       #workspaces button.focused { background: #b4a7d6; color: #000000; }
+      #workspaces button.urgent { background: #ff6b6b; color: #000000; }
+      /* i3status-style: plain text blocks split by thin pipes */
+      #custom-online, #network, #cpu, #memory, #pulseaudio, #battery, #clock, #tray {
+        padding: 0 10px; margin: 0; min-width: 0;
+        border-left: 1px solid #333333;
+      }
+      #custom-online { color: #8fd694; }
+      #network { color: #cdcdcd; }
       #network.disconnected { color: #ff6b6b; }
-    '';
+      #cpu { color: #b4a7d6; }
+      #cpu.warning, #memory.warning, #battery.warning { color: #e5c07b; }
+      #memory { color: #b4a7d6; }
+      #pulseaudio { color: #cdcdcd; }
+      #pulseaudio.muted { color: #878787; }
+      #battery.charging { color: #8fd694; }
+      #battery.critical:not(.charging) { color: #ff6b6b; }
+      #clock { color: #ffffff; }
+  '';
   };
 
   # home.file.".local/share/nvim/site/pack/harnessd/start/harnessd".source =

@@ -102,6 +102,11 @@ vim.lsp.config("ts_ls", {
   capabilities = capabilities,
 })
 
+vim.lsp.config("clangd", {
+  cmd = { "clangd", "--background-index", "--clang-tidy" },
+  capabilities = capabilities,
+})
+
 vim.lsp.config("rust_analyzer", {
   cmd = { "rust-analyzer" },
   capabilities = capabilities,
@@ -135,4 +140,49 @@ vim.lsp.config("rust_analyzer", {
   end,
 })
 
-vim.lsp.enable({ "lua_ls", "bashls", "nil_ls", "pyright", "ts_ls", "rust_analyzer" })
+-- Copilot inline (ghost text) completion via the native Neovim 0.12 API.
+-- Sign in once with :LspCopilotSignIn
+vim.lsp.config("copilot", {
+  cmd = { "copilot-language-server", "--stdio" },
+  root_markers = { ".git" },
+})
+
+vim.lsp.enable({
+  "lua_ls", "bashls", "nil_ls", "pyright", "ts_ls", "rust_analyzer", "clangd",
+  "copilot",
+})
+
+vim.lsp.inline_completion.enable()
+
+vim.keymap.set("i", "<M-l>", function()
+  if not vim.lsp.inline_completion.get() then
+    return "<M-l>"
+  end
+end, { expr = true, desc = "Accept Copilot suggestion" })
+vim.keymap.set("i", "<M-]>", function()
+  vim.lsp.inline_completion.select({ count = 1 })
+end, { desc = "Next Copilot suggestion" })
+vim.keymap.set("i", "<M-[>", function()
+  vim.lsp.inline_completion.select({ count = -1 })
+end, { desc = "Previous Copilot suggestion" })
+
+vim.api.nvim_create_user_command("LspCopilotSignIn", function()
+  local client = vim.lsp.get_clients({ name = "copilot" })[1]
+  if not client then
+    vim.notify("Copilot LSP not running; open a file in a git repo", vim.log.levels.WARN)
+    return
+  end
+  client:request("signIn", vim.empty_dict(), function(err, res)
+    if err or not res then
+      vim.notify(vim.inspect(err), vim.log.levels.ERROR)
+      return
+    end
+    if res.command then
+      vim.fn.setreg("+", res.userCode or "")
+      vim.notify(("Code %s (copied). Open %s"):format(res.userCode, res.verificationUri or "github.com/login/device"))
+      client:exec_cmd(res.command)
+    else
+      vim.notify("Copilot: " .. (res.status or "signed in"))
+    end
+  end)
+end, {})
