@@ -11,7 +11,7 @@ if ! command -v fzf >/dev/null 2>&1; then
   exit 1
 fi
 
-default_roots="$HOME/Documents/dev:$HOME/Documents/notes:$HOME/.config"
+default_roots="$HOME/dev:$HOME/Documents/notes:$HOME/.config"
 IFS=':' read -r -a search_roots <<< "${SESSIONIZER_ROOTS:-$default_roots}"
 
 list_candidates() {

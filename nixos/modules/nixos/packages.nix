@@ -51,6 +51,8 @@ in
     zigpkgs.default
     qemu
     pkgsCross.riscv64-embedded.buildPackages.gdb # riscv64-none-elf-gdb, for debugging boot0 under qemu -S -s
+    zellij
+
 
     allTargetBinutils
     cargo-chef
@@ -58,6 +60,7 @@ in
     clang-tools
     taplo
     lld
+    wild
     glibc.out
     glibc.static
     wildGcc

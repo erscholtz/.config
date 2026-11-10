@@ -108,7 +108,11 @@ vim.keymap.set("n", "<leader>o", "<cmd>Oil<cr>", { desc = "Open parent directory
 vim.keymap.set("n", "<leader>f", require("telescope.builtin").find_files, { desc = "Find files" })
 vim.keymap.set("n", "<leader>so", function()
   vim.cmd.write()
-  vim.cmd.source("%")
+  if vim.bo.filetype == "lua" or vim.bo.filetype == "vim" then
+    vim.cmd.source("%")
+  else
+    vim.notify("Not a lua/vim file; wrote only", vim.log.levels.INFO)
+  end
 end, { desc = "Source current file" })
 
 if harnessd_ok then

@@ -30,7 +30,7 @@
     '';
     shellAliases = {
       btw = "echo I use nix btw";
-      ss = "${config.home.homeDirectory}/.config/tmux/sessionizer.sh";
+      ss = "${config.home.homeDirectory}/.config/zellij/sessionizer.sh";
     };
   };
 
