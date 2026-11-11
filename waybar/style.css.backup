@@ -1,0 +1,6 @@
+* { font-family: "JetBrainsMono Nerd Font"; font-size: 11pt; }
+#workspaces button, #clock, #custom-online, #network, #pulseaudio, #battery, #tray { padding: 0; margin: 0; min-width: 0; }
+window#waybar { background: rgba(20, 20, 21, 0.92); color: #cdcdcd; }
+#workspaces button { padding: 4px 0; color: #606079; }
+#workspaces button.focused { background: #333738; color: #cdcdcd; }
+#network.disconnected { color: #d8647e; }
