@@ -22,6 +22,14 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.undofile = true
 
+-- Some terminals/multiplexers (e.g. zellij) forward mouse hover as button-3
+-- events, which pops the right-click menu. Disable right-mouse entirely.
+vim.opt.mousemodel = "extend"
+for _, key in ipairs({ "<RightMouse>", "<RightDrag>", "<RightRelease>",
+  "<2-RightMouse>", "<3-RightMouse>", "<4-RightMouse>" }) do
+  vim.keymap.set({ "n", "i", "v", "o", "c" }, key, "<Nop>")
+end
+
 vim.pack.add({
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/hrsh7th/nvim-cmp" },
