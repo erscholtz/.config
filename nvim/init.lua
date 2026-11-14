@@ -6,7 +6,7 @@ vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
 vim.opt.termguicolors = true
 vim.opt.cursorline = true
-vim.opt.colorcolumn = "80"
+vim.opt.colorcolumn = "100"
 
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
@@ -97,19 +97,6 @@ require("config.cmp")
 require("config.autopairs")
 require("config.lsp")
 
-local harnessd_root = vim.fn.expand("~/Documents/dev/harnessd")
-vim.opt.rtp:append(harnessd_root .. "/integrations/nvim")
-
-local harnessd_ok, harnessd = pcall(require, "harnessd")
-if harnessd_ok then
-  harnessd.setup({
-    command = harnessd_root .. "/target/debug/harnessd",
-    codex_command = "codex",
-  })
-else
-  vim.notify("harnessd Neovim integration not found", vim.log.levels.WARN)
-end
-
 vim.keymap.set("n", "<leader>q", "<cmd>quit<cr>", { desc = "Quit" })
 vim.keymap.set("n", "<leader>w", "<cmd>write<cr>", { desc = "Write" })
 vim.keymap.set("n", "<leader>o", "<cmd>Oil<cr>", { desc = "Open parent directory" })
@@ -122,12 +109,3 @@ vim.keymap.set("n", "<leader>so", function()
     vim.notify("Not a lua/vim file; wrote only", vim.log.levels.INFO)
   end
 end, { desc = "Source current file" })
-
-if harnessd_ok then
-  vim.keymap.set("n", "<leader>a", function()
-    harnessd.thread_ask()
-  end, { desc = "Harnessd ask" })
-  vim.keymap.set("n", "<leader>h", function()
-    harnessd.open_settings()
-  end, { desc = "Harnessd settings" })
-end

@@ -119,26 +119,27 @@
     };
     style = ''
       * { font-family: "JetBrainsMono Nerd Font"; font-size: 12pt; }
-      window#waybar { background: #000000; color: #cdcdcd; }
-      #workspaces button { padding: 0 8px; margin: 0; min-width: 0; color: #878787; border-radius: 0; }
-      #workspaces button.focused { background: #b4a7d6; color: #000000; }
-      #workspaces button.urgent { background: #ff6b6b; color: #000000; }
+      /* Colors from vague.nvim's palette (lua/vague/config/internal.lua). */
+      window#waybar { background: #141415; color: #cdcdcd; }
+      #workspaces button { padding: 0 8px; margin: 0; min-width: 0; color: #606079; border-radius: 0; }
+      #workspaces button.focused { background: #252530; color: #aeaed1; }
+      #workspaces button.urgent { background: #d8647e; color: #141415; }
       /* i3status-style: plain text blocks split by thin pipes */
       #custom-online, #network, #cpu, #memory, #pulseaudio, #battery, #clock, #tray {
         padding: 0 10px; margin: 0; min-width: 0;
-        border-left: 1px solid #333333;
+        border-left: 1px solid #333738;
       }
-      #custom-online { color: #8fd694; }
+      #custom-online { color: #7fa563; }
       #network { color: #cdcdcd; }
-      #network.disconnected { color: #ff6b6b; }
-      #cpu { color: #b4a7d6; }
-      #cpu.warning, #memory.warning, #battery.warning { color: #e5c07b; }
-      #memory { color: #b4a7d6; }
+      #network.disconnected { color: #d8647e; }
+      #cpu { color: #aeaed1; }
+      #cpu.warning, #memory.warning, #battery.warning { color: #f3be7c; }
+      #memory { color: #aeaed1; }
       #pulseaudio { color: #cdcdcd; }
-      #pulseaudio.muted { color: #878787; }
-      #battery.charging { color: #8fd694; }
-      #battery.critical:not(.charging) { color: #ff6b6b; }
-      #clock { color: #ffffff; }
+      #pulseaudio.muted { color: #606079; }
+      #battery.charging { color: #7fa563; }
+      #battery.critical:not(.charging) { color: #d8647e; }
+      #clock { color: #cdcdcd; }
   '';
   };
 
