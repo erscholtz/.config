@@ -1,4 +1,4 @@
-{ config, pkgs, herdr, ... }: {
+{ config, lib, pkgs, herdr, ... }: {
   home.stateVersion = "25.11";
   home.username = "e";
   home.homeDirectory = "/home/e";
@@ -18,6 +18,7 @@
 
   home.packages = with pkgs; [
     fzf
+    swaybg
     tmux
     copilot-language-server
     herdr.packages.${pkgs.system}.default
@@ -56,6 +57,75 @@
     [Greeter][Wallpaper][org.kde.image][General]
     Image=file://${config.home.homeDirectory}/Pictures/Wallpapers/wallhaven-e89l8k.jpg
   '';
+
+  # Sway itself is installed by the NixOS module (programs.sway); home-manager
+  # only writes ~/.config/sway/config.
+  wayland.windowManager.sway = {
+    enable = true;
+    package = null;
+    checkConfig = false;
+    # /etc/sway/config.d/nixos.conf (included below) already does the
+    # dbus/systemd session integration.
+    systemd.enable = false;
+    config = rec {
+      modifier = "Mod4";
+      terminal = "ghostty";
+      menu = "wmenu-run";
+      bars = [ { command = "${config.programs.waybar.package}/bin/waybar"; } ];
+      output."*".bg = "${config.home.homeDirectory}/Pictures/Wallpapers/wallhaven-e89l8k.jpg fill";
+      gaps.inner = 0;
+      window.titlebar = false;
+      keybindings = lib.mkOptionDefault {
+        "${modifier}+Shift+Return" = "exec helium";
+        "${modifier}+n" = "exec dolphin";
+        "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+        "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+        "XF86AudioRaiseVolume" = "exec wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+";
+        "XF86AudioMicMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+        "XF86MonBrightnessDown" = "exec brightnessctl set 5%-";
+        "XF86MonBrightnessUp" = "exec brightnessctl set 5%+";
+        "Print" = "exec grim";
+      };
+    };
+    # Keyboard layout (keyboard.nix) and session integration live here.
+    extraConfig = ''
+      include /etc/sway/config.d/*
+    '';
+  };
+
+  # Default applications (~/.config/mimeapps.list).
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = let
+      browser = "helium.desktop";
+      editor = "nvim.desktop";
+      pdf = "org.kde.okular.desktop";
+      archive = "org.kde.ark.desktop";
+    in {
+      "text/html" = browser;
+      "application/xhtml+xml" = browser;
+      "x-scheme-handler/http" = browser;
+      "x-scheme-handler/https" = browser;
+      "x-scheme-handler/about" = browser;
+      "x-scheme-handler/unknown" = browser;
+      "inode/directory" = "org.kde.dolphin.desktop";
+      "text/plain" = editor;
+      "text/markdown" = editor;
+      "application/pdf" = pdf;
+      "application/epub+zip" = pdf;
+      "image/png" = pdf;
+      "image/jpeg" = pdf;
+      "image/gif" = pdf;
+      "image/webp" = pdf;
+      "application/zip" = archive;
+      "application/x-tar" = archive;
+      "application/gzip" = archive;
+      "application/x-7z-compressed" = archive;
+      "x-scheme-handler/discord" = "discord.desktop";
+      "x-scheme-handler/spotify" = "spotify.desktop";
+      "x-scheme-handler/claude-cli" = "claude-code-url-handler.desktop";
+    };
+  };
 
   programs.waybar = {
     enable = true;
