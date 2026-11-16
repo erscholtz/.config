@@ -6,6 +6,8 @@
   imports = [ ./keyboard.nix ];
 
   programs.sway.enable = true;
+  # Default extraPackages minus foot (ghostty is the terminal).
+  programs.sway.extraPackages = with pkgs; [ brightnessctl grim swayidle swaylock wmenu ];
 
   services.greetd = {
     enable = true;

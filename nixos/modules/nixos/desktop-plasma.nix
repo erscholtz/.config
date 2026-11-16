@@ -9,6 +9,8 @@
   services.xserver.desktopManager.xfce.enable = true;
 
   programs.sway.enable = true;
+  # Default extraPackages minus foot (ghostty is the terminal).
+  programs.sway.extraPackages = with pkgs; [ brightnessctl grim swayidle swaylock wmenu ];
 
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     aurorae

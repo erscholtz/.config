@@ -75,6 +75,11 @@
       output."*".bg = "${config.home.homeDirectory}/Pictures/Wallpapers/wallhaven-e89l8k.jpg fill";
       gaps.inner = 0;
       window.titlebar = false;
+      input."type:touchpad" = {
+        natural_scroll = "enabled";
+        scroll_factor = "0.5";
+        tap = "enabled";
+      };
       keybindings = lib.mkOptionDefault {
         "${modifier}+Shift+Return" = "exec helium";
         "${modifier}+n" = "exec dolphin";
@@ -92,6 +97,16 @@
       include /etc/sway/config.d/*
     '';
   };
+
+  # Hide launchers bundled with kate/vim that duplicate other editors.
+  xdg.dataFile = lib.genAttrs [ "applications/org.kde.kwrite.desktop" "applications/gvim.desktop" ] (_: {
+    text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Hidden
+      NoDisplay=true
+    '';
+  });
 
   # Default applications (~/.config/mimeapps.list).
   xdg.mimeApps = {
