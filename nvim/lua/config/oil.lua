@@ -170,6 +170,77 @@ refresh.callback = function(...)
   original_refresh(...)
 end
 
+-- The git status cache goes stale whenever files change (saves, shell commands,
+-- oil's own mutations, other programs). Drop it on those events and re-render
+-- the oil buffer the next time it is shown so the status column stays current.
+local git_status_dirty = false
+
+local function invalidate_git_status()
+  git_status_cache = {}
+  git_status_dirty = true
+end
+
+local function rerender_if_dirty(bufnr)
+  if not git_status_dirty or vim.bo[bufnr].filetype ~= "oil" or vim.bo[bufnr].modified then
+    return
+  end
+  git_status_dirty = false
+  vim.schedule(function()
+    if vim.api.nvim_get_current_buf() == bufnr and not vim.bo[bufnr].modified then
+      vim.cmd.edit({ bang = true })
+    end
+  end)
+end
+
+-- Re-render every oil buffer currently shown in a window (e.g. oil in a split
+-- next to the file being edited) so it updates without having to re-enter it.
+local function rerender_visible_oil()
+  vim.schedule(function()
+    local seen = {}
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      if not seen[buf] and vim.bo[buf].filetype == "oil" and not vim.bo[buf].modified then
+        seen[buf] = true
+        vim.api.nvim_win_call(win, function()
+          local view = vim.fn.winsaveview()
+          vim.cmd.edit({ bang = true })
+          vim.fn.winrestview(view)
+        end)
+      end
+    end
+  end)
+end
+
+local group = vim.api.nvim_create_augroup("OilGitStatus", { clear = true })
+
+vim.api.nvim_create_autocmd({ "BufWritePost", "FocusGained", "ShellCmdPost", "TermLeave" }, {
+  group = group,
+  callback = function(args)
+    -- Saving an oil buffer applies its edits; OilActionsPost handles that.
+    if args.event == "BufWritePost" and vim.bo[args.buf].filetype == "oil" then
+      return
+    end
+    invalidate_git_status()
+    rerender_visible_oil()
+  end,
+})
+
+vim.api.nvim_create_autocmd("User", {
+  group = group,
+  pattern = "OilActionsPost",
+  callback = function()
+    invalidate_git_status()
+    rerender_visible_oil()
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  group = group,
+  callback = function(args)
+    rerender_if_dirty(args.buf)
+  end,
+})
+
 require("oil").setup({
   columns = {
     "icon",
