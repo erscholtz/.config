@@ -17,3 +17,6 @@
 !tmux/tmux.conf
 !tmux/sessionizer.sh
 !waybar/
+!waybar/**
+!zellij/
+!zellij/**
